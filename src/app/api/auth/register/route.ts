@@ -3,6 +3,8 @@ import User from "@/models/users"
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import { cookies } from "next/headers";
+
 // import { Resend } from "resend"
 
 connectDB()
@@ -13,6 +15,7 @@ export async function POST(request: NextRequest) {
     try {
 
         if (!username || !email || !password) {
+            console.log("Please provide all fields")
             return NextResponse.json({ error: ["Please provide all fields"] }, { status: 400 })
         }
 
@@ -47,6 +50,18 @@ export async function POST(request: NextRequest) {
             }
 
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "30d" })
+
+            const cookieStore = await cookies();
+            cookieStore.set({
+                name: "token",
+                value: token,
+                path: "/",
+                httpOnly: true,
+                sameSite: "strict",
+                maxAge: 2592000,
+                secure: true,
+            });
+
             // const resend = new Resend(process.env.RESEND_API_KEY as string)
 
             // const { data } = await resend.emails.send({
@@ -57,7 +72,7 @@ export async function POST(request: NextRequest) {
             // })
 
 
-            return NextResponse.json({ user, token }, { status: 201 })
+            return NextResponse.json({ user }, { status: 201 })
         }
     } catch (error) {
 

@@ -1,6 +1,14 @@
+"use client"
+
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 const Footer = () => {
+
+    const pathname = usePathname()
+
+    if (pathname === "/login" || pathname === "/register" || pathname.startsWith("/profile")) return null;
+
     return (
         <div className="flex flex-col w-full bg-gray-800 text-white py-20 px-25">
             <div className="flex items-center justify-between">
