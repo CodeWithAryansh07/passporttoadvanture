@@ -16,11 +16,11 @@ const categories = [
     "Cultural",
 ];
 
-const Destination = ({ params }) => {
+const Destination = ({ params }: { params: Promise<{ name: string }> }) => {
 
     // const router = useRouter();
 
-    const { name } = React.use(params) as { name: string };
+    const { name } = React.use(params);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [sortBy, setSortBy] = useState<"rating" | "duration">("rating");
 
